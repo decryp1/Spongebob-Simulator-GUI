@@ -146,7 +146,7 @@ end)
 local AutoPickupTab = Window:NewTab("Auto Pickup")
 local AutoPickupSection = AutoPickupTab:NewSection("DONT USE MORPHS!!!")
 
-local TweenService = game:GetService("TweenService")
+local TweenService = game:GetService("TweenService") -- tweening smoothly moves your character to a position with a certain speed, opposed to teleportation, which instantly brings you to the specified location.
 local autoPicking = false
 local tweenSpeed = 100 -- Default tween speed
 local tweenRadius = 200 -- Default radius for detecting coins
