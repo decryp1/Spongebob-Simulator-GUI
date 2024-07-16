@@ -1,5 +1,7 @@
+-- the people who made this game suck SO BAD AT CODING that the eggs are broken bad enough to where just looking at their code makes me nauseous LMAO
+-- i might add more eggs soon but for now im gonna find other shit to make, this games code is legit sickening, it was basic math that fucked them up
 local Library = loadstring(game:HttpGet("https://raw.githubusercontent.com/xHeptc/Kavo-UI-Library/main/source.lua"))()
-local Window = Library.CreateLib("spongebob game script", "Serpent") -- for different colors, use these: "GrapeTheme" "DarkTheme" "LightTheme" "BloodTheme" "Ocean" "Midnight" "Sentinel" "Synapse" "Serpent"
+local Window = Library.CreateLib("Spongebob Simulator Script by d3cryptt", "Serpent") -- for different colors, use these: "GrapeTheme" "DarkTheme" "LightTheme" "BloodTheme" "Ocean" "Midnight" "Sentinel" "Synapse" "Serpent"
 -- Autofarm
 local Autofarm = Window:NewTab("Autofarm")
 local AutofarmSection = Autofarm:NewSection("DONT USE SQUIDWARD TELEPORTS WITH A MORPH!!!")
@@ -170,6 +172,74 @@ AutoPickupSection:NewButton("Stop AutoPickup", "Stop auto picking up closest cur
     stopAutoPicking()
 end)
 
+local AutoEggsSection = Window:NewTab("Auto Eggs")
+local AutoEggsSection = AutoEggsSection:NewSection("someone broke the eggs, ADDING MORE SOON DWDW")
+
+
+-- Create dropdown options for eggs
+local eggOptions = {}
+for i = 1, 13 do
+    table.insert(eggOptions, "area" .. i .. " basic")
+    table.insert(eggOptions, "area" .. i .. " golden")
+end
+
+local selectedEgg
+local autoOpenEggs = false
+
+-- Function to open eggs
+local function openEgg(egg)
+    local args = {
+        [1] = egg,
+        [2] = 1
+    }
+    game:GetService("ReplicatedStorage"):WaitForChild("Knit"):WaitForChild("Services"):WaitForChild("ClamService"):WaitForChild("RF"):WaitForChild("Purchase"):InvokeServer(unpack(args))
+end
+
+-- Function to start auto opening eggs
+local function startAutoOpen()
+    while autoOpenEggs do
+        openEgg(selectedEgg)
+        wait(0.1)
+    end
+end
+
+-- Dropdown for selecting egg
+AutoEggsSection:NewDropdown("Select Egg", "Select the egg to open", eggOptions, function(currentOption)
+    selectedEgg = currentOption
+    print("Selected Egg: " .. selectedEgg)
+end)
+
+-- Button to start auto opening eggs
+AutoEggsSection:NewButton("Start Auto Open", "Start automatically opening the selected egg", function()
+    if selectedEgg then
+        autoOpenEggs = true
+        startAutoOpen()
+    else
+        print("Please select an egg first.")
+    end
+end)
+
+-- Button to stop auto opening eggs
+AutoEggsSection:NewButton("Stop Auto Open", "Stop automatically opening eggs", function()
+    autoOpenEggs = false 
+    end)
+
+
+local Player = Window:NewTab("Player")
+local PlayerSection = Player:NewSection("freakybob is behind you")
+
+-- WalkSpeed and JumpPower sliders
+PlayerSection:NewSlider("WalkSpeed", "Adjust the WalkSpeed", 200, 16, function(value)
+    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
+end)
+ 
+PlayerSection:NewSlider("JumpPower", "Adjust the JumpPower", 200, 50, function(value)
+    game.Players.LocalPlayer.Character.Humanoid.JumpPower = value
+end)
+
+PlayerSection:NewButton("Infinite Yield (Admin Commands)", "gives you admin commands", function()
+    loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+end)
 
 local Quests = Window:NewTab("Quests")
 local QuestsSection = Quests:NewSection("just teleports to things like instruments for quests")
@@ -231,21 +301,6 @@ QuestsSection:NewButton("Squidward Secret Teleports", "Start teleporting to secr
     startTeleporting()
 end)
 
-local Player = Window:NewTab("Player")
-local PlayerSection = Player:NewSection("freakybob is behind you")
-
--- WalkSpeed and JumpPower sliders
-PlayerSection:NewSlider("WalkSpeed", "Adjust the WalkSpeed", 200, 16, function(value)
-    game.Players.LocalPlayer.Character.Humanoid.WalkSpeed = value
-end)
- 
-PlayerSection:NewSlider("JumpPower", "Adjust the JumpPower", 200, 50, function(value)
-    game.Players.LocalPlayer.Character.Humanoid.JumpPower = value
-end)
-
-PlayerSection:NewButton("Infinite Yield (Admin Commands)", "gives you admin commands", function()
-    loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
-end)
 
 
 local Week1Section = Window:NewTab("Week 1"):NewSection("Teleport")
@@ -299,3 +354,4 @@ end
 Week2Section:NewButton("Teleport to Week 2 Parts", "Teleports to parts in Week 2", function()
     findAndTeleportWeek2()
 end)
+
