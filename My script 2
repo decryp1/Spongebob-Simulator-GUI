@@ -69,57 +69,7 @@ local function stopClicking()
     clicking = false
 end
 
--- Define the path to check for Secret folders
-local secretsPath = game.Workspace.Programmables.Secrets
 
--- List of Secret folders to check
-local secretFolders = {"Secret1", "Secret2", "Secret3", "Secret4"}
-
--- Function to teleport to a specific position
-local function teleportToPosition(targetPosition)
-    local character = game.Players.LocalPlayer.Character
-    if not character or not character:FindFirstChild("HumanoidRootPart") then return end
-
-    -- Set the character's HumanoidRootPart CFrame to the target position
-    character.HumanoidRootPart.CFrame = CFrame.new(targetPosition)
-end
-
--- Function to find parts with TouchInterest in Secret folders
-local function getSecretParts()
-    local parts = {}
-    for _, folderName in ipairs(secretFolders) do
-        local folder = secretsPath:FindFirstChild(folderName)
-        if folder then
-            for _, part in ipairs(folder:GetDescendants()) do
-                if part:IsA("Part") and part:FindFirstChild("TouchInterest") then
-                    table.insert(parts, part)
-                end
-            end
-        end
-    end
-    return parts
-end
-
--- Function to start the teleportation loop
-local function startTeleporting()
-    teleporting = true
-    while teleporting do
-        local secretParts = getSecretParts()
-        for _, part in ipairs(secretParts) do
-            if not teleporting then break end
-            -- Teleport 3 studs above the part
-            local targetPosition = part.Position + Vector3.new(0, 4, 0)
-            teleportToPosition(targetPosition)
-            wait(2) -- Wait for 1 second between teleports
-        end
-        wait(0.5) -- Check again after a short delay if no part found
-    end
-end
-
--- Function to stop the teleportation loop
-local function stopTeleporting()
-    teleporting = false
-end
 
 -- Add buttons to start and stop the clicking loop
 AutofarmSection:NewButton("Start Autofarm", "Start clicking closest node", function()
@@ -133,20 +83,12 @@ end)
 AutofarmSection:NewSlider("Autofarm Range", "Adjust the Autofarm range ", 1000, 10, function(value)
     radius = value
 end)    
--- Add buttons to start and stop the teleportation loop
-AutofarmSection:NewButton("Squidward Secret Teleports", "Start teleporting to secret parts", function()
-    startTeleporting()
-end)
-
-AutofarmSection:NewButton("Stop Teleporting", "Stop teleporting to secret parts", function()
-    stopTeleporting()
-end)
 
 
 local AutoPickupTab = Window:NewTab("Auto Pickup")
 local AutoPickupSection = AutoPickupTab:NewSection("DONT USE MORPHS!!!")
 
-local TweenService = game:GetService("TweenService") -- tweening smoothly moves your character to a position with a certain speed, opposed to teleportation, which instantly brings you to the specified location.
+local TweenService = game:GetService("TweenService")
 local autoPicking = false
 local tweenSpeed = 100 -- Default tween speed
 local tweenRadius = 200 -- Default radius for detecting coins
@@ -228,6 +170,67 @@ AutoPickupSection:NewButton("Stop AutoPickup", "Stop auto picking up closest cur
     stopAutoPicking()
 end)
 
+
+local Quests = Window:NewTab("Quests")
+local QuestsSection = Quests:NewSection("just teleports to things like instruments for quests")
+
+-- Define the path to check for Secret folders
+local secretsPath = game.Workspace.Programmables.Secrets
+
+-- List of Secret folders to check
+local secretFolders = {"Secret1", "Secret2", "Secret3", "Secret4"}
+
+-- Function to teleport to a specific position
+local function teleportToPosition(targetPosition)
+    local character = game.Players.LocalPlayer.Character
+    if not character or not character:FindFirstChild("HumanoidRootPart") then return end
+
+    -- Set the character's HumanoidRootPart CFrame to the target position
+    character.HumanoidRootPart.CFrame = CFrame.new(targetPosition)
+end
+
+-- Function to find parts with TouchInterest in Secret folders
+local function getSecretParts()
+    local parts = {}
+    for _, folderName in ipairs(secretFolders) do
+        local folder = secretsPath:FindFirstChild(folderName)
+        if folder then
+            for _, part in ipairs(folder:GetDescendants()) do
+                if part:IsA("Part") and part:FindFirstChild("TouchInterest") then
+                    table.insert(parts, part)
+                end
+            end
+        end
+    end
+    return parts
+end
+
+-- Function to start the teleportation loop
+local function startTeleporting()
+    teleporting = true
+    while teleporting do
+        local secretParts = getSecretParts()
+        for _, part in ipairs(secretParts) do
+            if not teleporting then break end
+            -- Teleport 3 studs above the part
+            local targetPosition = part.Position + Vector3.new(0, 4, 0)
+            teleportToPosition(targetPosition)
+            wait(2) -- Wait for 1 second between teleports
+        end
+        wait(0.5) -- Check again after a short delay if no part found
+    end
+end
+
+-- Function to stop the teleportation loop
+local function stopTeleporting()
+    teleporting = false
+end
+
+-- Add buttons to start and stop the teleportation loop
+QuestsSection:NewButton("Squidward Secret Teleports", "Start teleporting to secret parts", function()
+    startTeleporting()
+end)
+
 local Player = Window:NewTab("Player")
 local PlayerSection = Player:NewSection("freakybob is behind you")
 
@@ -242,4 +245,57 @@ end)
 
 PlayerSection:NewButton("Infinite Yield (Admin Commands)", "gives you admin commands", function()
     loadstring(game:HttpGet('https://raw.githubusercontent.com/EdgeIY/infiniteyield/master/source'))()
+end)
+
+
+local Week1Section = Window:NewTab("Week 1"):NewSection("Teleport")
+
+-- Function to teleport to a part
+local function teleportToPart(part)
+    local player = game.Players.LocalPlayer
+    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        local humanoidRootPart = player.Character.HumanoidRootPart
+        humanoidRootPart.CFrame = CFrame.new(part.Position + Vector3.new(0, 10, 0))
+    end
+end
+
+-- Function to find parts with TouchInterest and teleport
+local function findAndTeleportWeek1()
+    local path = workspace.Programmables.Secrets.AnniversaryQuestW1
+    for _, part in ipairs(path:GetDescendants()) do
+        if part:IsA("BasePart") and part:FindFirstChildOfClass("TouchTransmitter") then
+            teleportToPart(part)
+            wait(2)
+        end
+    end
+end
+
+Week1Section:NewButton("Teleport to Week 1 Instruments", "Teleports to parts in Week 1", function()
+    findAndTeleportWeek1()
+end)
+
+local Week2Section = Window:NewTab("Week 2"):NewSection("Teleport")
+
+-- Function to teleport to a part
+local function teleportToPart(part)
+    local player = game.Players.LocalPlayer
+    if player and player.Character and player.Character:FindFirstChild("HumanoidRootPart") then
+        local humanoidRootPart = player.Character.HumanoidRootPart
+        humanoidRootPart.CFrame = CFrame.new(part.Position + Vector3.new(0, 10, 0))
+    end
+end
+
+-- Function to find parts with TouchInterest and teleport
+local function findAndTeleportWeek2()
+    local path = workspace.Programmables.Secrets.AnniversaryQuestW2
+    for _, part in ipairs(path:GetDescendants()) do
+        if part:IsA("BasePart") and part:FindFirstChildOfClass("TouchTransmitter") then
+            teleportToPart(part)
+            wait(2)
+        end
+    end
+end
+
+Week2Section:NewButton("Teleport to Week 2 Parts", "Teleports to parts in Week 2", function()
+    findAndTeleportWeek2()
 end)
